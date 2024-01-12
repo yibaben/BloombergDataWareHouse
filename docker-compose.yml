@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+  app:
+    container_name: clusteredDataWarehouse
+    image: clustereddatawarehouse
+    build: ./
+    ports:
+      - "7070:8090"
+    depends_on:
+      - db
+    networks:
+      - network
+  db:
+    container_name: clusteredData_warehouse
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=mharie
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=clusteredData_warehouse
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
