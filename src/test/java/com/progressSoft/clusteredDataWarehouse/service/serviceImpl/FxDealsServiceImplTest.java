@@ -1,10 +1,10 @@
 package com.progressSoft.clusteredDataWarehouse.service.serviceImpl;
 
-import com.progressSoft.clusteredDataWarehouse.dto.request.FxDealRequestDTO;
-import com.progressSoft.clusteredDataWarehouse.dto.response.FxDealResponseDTO;
-import com.progressSoft.clusteredDataWarehouse.exception.DuplicateEntityException;
-import com.progressSoft.clusteredDataWarehouse.exception.InvalidISOCodeException;
-import com.progressSoft.clusteredDataWarehouse.model.FxDeal;
+import com.progressSoft.clusteredDataWarehouse.dto.request.ForexDealsRequest;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.ForexDealsResponse;
+import com.progressSoft.clusteredDataWarehouse.exception.EntityAlreadyExistsException;
+import com.progressSoft.clusteredDataWarehouse.exception.ISOCodeValidationException;
+import com.progressSoft.clusteredDataWarehouse.entity.ForexDeals;
 import com.progressSoft.clusteredDataWarehouse.repository.FxDealRepository;
 import com.progressSoft.clusteredDataWarehouse.service.FxDealService;
 import com.progressSoft.clusteredDataWarehouse.service.mapper.FxDealMapper;
@@ -45,30 +45,30 @@ class FxDealsServiceImplTest {
 
     @Test
     void saveDealUniqueDeal() {
-        FxDealRequestDTO requestDto = createDealRequest();
-        FxDeal fxDeal = createDeal(requestDto);
+        ForexDealsRequest requestDto = createDealRequest();
+        ForexDeals forexDeals = createDeal(requestDto);
         lenient().when(fxDealsRepository.findByDealUniqueId(anyString()))
                 .thenReturn(Optional.empty());
-        lenient().when(fxDealsRepository.save(fxDeal)).
-                thenReturn(fxDeal);
+        lenient().when(fxDealsRepository.save(forexDeals)).
+                thenReturn(forexDeals);
         lenient().when(fxDealMapper.MapDtoRequestToFxDeal(requestDto))
-                .thenReturn(fxDeal);
-        FxDealResponseDTO responseDto = fxDealService.saveFxDeal(requestDto);
+                .thenReturn(forexDeals);
+        ForexDealsResponse responseDto = fxDealService.saveFxDeal(requestDto);
         verify(fxDealValidator, times(1)).isDealUnique(requestDto.getDealUniqueId());
-        verify(fxDealsRepository, times(1)).save(fxDeal);
+        verify(fxDealsRepository, times(1)).save(forexDeals);
     }
 
     @Test
     void testExceptionThrownWhenUniqueIdAlreadyExists() {
-        FxDealRequestDTO dealRequestDto = createDealRequest();
-        FxDeal deal = createDeal(dealRequestDto);
+        ForexDealsRequest dealRequestDto = createDealRequest();
+        ForexDeals deal = createDeal(dealRequestDto);
 
         lenient().when(fxDealsRepository.findByDealUniqueId(dealRequestDto.getDealUniqueId()))
                 .thenReturn(Optional.of(deal));
         lenient().when(fxDealValidator.isDealUnique("id"))
-                .thenThrow(new DuplicateEntityException("Deal already exists"));
+                .thenThrow(new EntityAlreadyExistsException("Deal already exists"));
 
-        DuplicateEntityException ex = assertThrows(DuplicateEntityException.class, () -> {
+        EntityAlreadyExistsException ex = assertThrows(EntityAlreadyExistsException.class, () -> {
             fxDealService.saveFxDeal(dealRequestDto);
         });
         assertEquals("Deal already exists", ex.getMessage());
@@ -77,8 +77,8 @@ class FxDealsServiceImplTest {
 
     @Test
     void getDealByUniqueId() {
-        FxDealRequestDTO dealRequestDto = createDealRequest();
-        FxDeal deal = createDeal(dealRequestDto);
+        ForexDealsRequest dealRequestDto = createDealRequest();
+        ForexDeals deal = createDeal(dealRequestDto);
         when(fxDealsRepository.findByDealUniqueId(anyString()))
                 .thenReturn(Optional.of(deal));
         fxDealService.getDealByUniqueId(dealRequestDto.getDealUniqueId());
@@ -88,30 +88,30 @@ class FxDealsServiceImplTest {
 
     @Test
     void shouldThrowAnInvalidISOExceptionWhenFromCurrencyIsInvalid() {
-        FxDealRequestDTO fxDealDTO = FxDealRequestDTO.builder()
+        ForexDealsRequest fxDealDTO = ForexDealsRequest.builder()
                 .dealAmount(BigDecimal.valueOf(20000.0))
                 .fromCurrencyISOCode("jjj")
                 .toCurrencyISOCode("NGN")
                 .build();
-        when(fxDealValidator.isISOCurrencyCodeValid(fxDealDTO.getFromCurrencyISOCode())).thenThrow(InvalidISOCodeException.class);
-        assertThrows(InvalidISOCodeException.class, () -> fxDealService.saveFxDeal(fxDealDTO));
+        when(fxDealValidator.isISOCurrencyCodeValid(fxDealDTO.getFromCurrencyISOCode())).thenThrow(ISOCodeValidationException.class);
+        assertThrows(ISOCodeValidationException.class, () -> fxDealService.saveFxDeal(fxDealDTO));
     }
 
 
     @Test
     void shouldThrowAnInvalidISOExceptionWhenToCurrencyIsInvalid() {
-        FxDealRequestDTO fxDealDTO = FxDealRequestDTO.builder()
+        ForexDealsRequest fxDealDTO = ForexDealsRequest.builder()
                 .dealAmount(BigDecimal.valueOf(20000.0))
                 .fromCurrencyISOCode("USD")
                 .toCurrencyISOCode("fff")
                 .build();
         when(fxDealValidator.isISOCurrencyCodeValid(fxDealDTO.getFromCurrencyISOCode())).thenReturn(true);
-        when(fxDealValidator.isISOCurrencyCodeValid(fxDealDTO.getToCurrencyISOCode())).thenThrow(InvalidISOCodeException.class);
-        assertThrows(InvalidISOCodeException.class, () -> fxDealService.saveFxDeal(fxDealDTO));
+        when(fxDealValidator.isISOCurrencyCodeValid(fxDealDTO.getToCurrencyISOCode())).thenThrow(ISOCodeValidationException.class);
+        assertThrows(ISOCodeValidationException.class, () -> fxDealService.saveFxDeal(fxDealDTO));
     }
 
-    private FxDealRequestDTO createDealRequest() {
-        return FxDealRequestDTO.builder()
+    private ForexDealsRequest createDealRequest() {
+        return ForexDealsRequest.builder()
                 .dealUniqueId("id")
                 .toCurrencyISOCode("ALL")
                 .fromCurrencyISOCode("USD")
@@ -119,11 +119,11 @@ class FxDealsServiceImplTest {
                 .build();
     }
 
-    private FxDeal createDeal(FxDealRequestDTO requestDto) {
+    private ForexDeals createDeal(ForexDealsRequest requestDto) {
         Currency toCurrencyISOCode = Currency.getInstance(requestDto.getToCurrencyISOCode());
         Currency fromCurrencyISOCode = Currency.getInstance(requestDto.getFromCurrencyISOCode());
 
-        return FxDeal.builder()
+        return ForexDeals.builder()
                 .dealUniqueId(requestDto.getDealUniqueId())
                 .toCurrencyISOCode(toCurrencyISOCode)
                 .fromCurrencyISOCode(fromCurrencyISOCode)

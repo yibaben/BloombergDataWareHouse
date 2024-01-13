@@ -1,8 +1,8 @@
 package com.progressSoft.clusteredDataWarehouse.service.mapper;
 
-import com.progressSoft.clusteredDataWarehouse.dto.request.FxDealRequestDTO;
-import com.progressSoft.clusteredDataWarehouse.dto.response.FxDealResponseDTO;
-import com.progressSoft.clusteredDataWarehouse.model.FxDeal;
+import com.progressSoft.clusteredDataWarehouse.dto.request.ForexDealsRequest;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.ForexDealsResponse;
+import com.progressSoft.clusteredDataWarehouse.entity.ForexDeals;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -11,22 +11,22 @@ import java.util.Currency;
 @Component
 @Slf4j
 public class FxDealMapper {
-    public FxDeal MapDtoRequestToFxDeal(FxDealRequestDTO fxDealRequestDTO) {
-        FxDeal fxDeal = new FxDeal();
-        fxDeal.setDealUniqueId(fxDealRequestDTO.getDealUniqueId());
-        fxDeal.setDealAmount(fxDealRequestDTO.getDealAmount());
-        fxDeal.setFromCurrencyISOCode(fxDealRequestDTO.getFromCurrencyISOCode() != null ? Currency.getInstance(fxDealRequestDTO.getFromCurrencyISOCode()) : null);
-        fxDeal.setToCurrencyISOCode(fxDealRequestDTO.getToCurrencyISOCode() != null? Currency.getInstance(fxDealRequestDTO.getToCurrencyISOCode()) : null);
-        fxDeal.setDealTimeStamp(LocalDateTime.now());
-        return fxDeal;
+    public ForexDeals MapDtoRequestToFxDeal(ForexDealsRequest forexDealsRequest) {
+        ForexDeals forexDeals = new ForexDeals();
+        forexDeals.setDealUniqueId(forexDealsRequest.getDealUniqueId());
+        forexDeals.setDealAmount(forexDealsRequest.getDealAmount());
+        forexDeals.setFromCurrencyISOCode(forexDealsRequest.getFromCurrencyISOCode() != null ? Currency.getInstance(forexDealsRequest.getFromCurrencyISOCode()) : null);
+        forexDeals.setToCurrencyISOCode(forexDealsRequest.getToCurrencyISOCode() != null? Currency.getInstance(forexDealsRequest.getToCurrencyISOCode()) : null);
+        forexDeals.setDealTimeStamp(LocalDateTime.now());
+        return forexDeals;
     }
-    public FxDealResponseDTO mapFxDealToDTORequest(FxDeal fxDeal) {
-        FxDealResponseDTO fxDealDTO = new FxDealResponseDTO();
-        fxDealDTO.setDealAmount(fxDeal.getDealAmount() != null? fxDeal.getDealAmount() : null);
-        fxDealDTO.setDealUniqueId(fxDeal.getDealUniqueId() != null ? fxDeal.getDealUniqueId() : null);
-        fxDealDTO.setFromCurrencyISOCode(fxDeal.getFromCurrencyISOCode() != null ? fxDeal.getFromCurrencyISOCode().getCurrencyCode() : null);
-        fxDealDTO.setToCurrencyISOCode(fxDeal.getToCurrencyISOCode() != null ? fxDeal.getToCurrencyISOCode().getCurrencyCode() : null);
-        fxDealDTO.setDealTimeStamp(fxDeal.getDealTimeStamp() != null ? fxDeal.getDealTimeStamp() : null);
+    public ForexDealsResponse mapFxDealToDTORequest(ForexDeals forexDeals) {
+        ForexDealsResponse fxDealDTO = new ForexDealsResponse();
+        fxDealDTO.setDealAmount(forexDeals.getDealAmount() != null? forexDeals.getDealAmount() : null);
+        fxDealDTO.setDealUniqueId(forexDeals.getDealUniqueId() != null ? forexDeals.getDealUniqueId() : null);
+        fxDealDTO.setFromCurrencyISOCode(forexDeals.getFromCurrencyISOCode() != null ? forexDeals.getFromCurrencyISOCode().getCurrencyCode() : null);
+        fxDealDTO.setToCurrencyISOCode(forexDeals.getToCurrencyISOCode() != null ? forexDeals.getToCurrencyISOCode().getCurrencyCode() : null);
+        fxDealDTO.setDealTimeStamp(forexDeals.getDealTimeStamp() != null ? forexDeals.getDealTimeStamp() : null);
         return fxDealDTO;
     }
 }

@@ -1,8 +1,8 @@
 package com.progressSoft.clusteredDataWarehouse.controller;
 
-import com.progressSoft.clusteredDataWarehouse.dto.request.FxDealRequestDTO;
-import com.progressSoft.clusteredDataWarehouse.dto.response.ApiResponse;
-import com.progressSoft.clusteredDataWarehouse.dto.response.FxDealResponseDTO;
+import com.progressSoft.clusteredDataWarehouse.dto.request.ForexDealsRequest;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.ApiResponse;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.ForexDealsResponse;
 import com.progressSoft.clusteredDataWarehouse.service.FxDealService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,20 +17,20 @@ import static com.progressSoft.clusteredDataWarehouse.util.ApiUtils.buildApiResp
 @RequestMapping("/api/v1/fxDeals")
 @Slf4j
 @RequiredArgsConstructor
-public class FxDealController {
+public class ForexDealsController {
 
     private final FxDealService fxDealService;
 
     @PostMapping()
-    public ResponseEntity<ApiResponse> createFxDeal(@Valid @RequestBody FxDealRequestDTO fxDealRequestDTO) {
-        FxDealResponseDTO fxDealResponseDTO = fxDealService.saveFxDeal(fxDealRequestDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(buildApiResponse(fxDealResponseDTO, HttpStatus.OK));
+    public ResponseEntity<ApiResponse> createFxDeal(@Valid @RequestBody ForexDealsRequest forexDealsRequest) {
+        ForexDealsResponse forexDealsResponse = fxDealService.saveFxDeal(forexDealsRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(buildApiResponse(forexDealsResponse, HttpStatus.OK));
     }
 
     @GetMapping("/{dealId}")
     public ResponseEntity<ApiResponse> getDeal(@PathVariable String dealId) {
-        FxDealResponseDTO fxDealResponseDTO = fxDealService.getDealByUniqueId(dealId);
-        return ResponseEntity.status(HttpStatus.OK).body(buildApiResponse(fxDealResponseDTO, HttpStatus.OK));
+        ForexDealsResponse forexDealsResponse = fxDealService.getDealByUniqueId(dealId);
+        return ResponseEntity.status(HttpStatus.OK).body(buildApiResponse(forexDealsResponse, HttpStatus.OK));
     }
 
     @GetMapping()

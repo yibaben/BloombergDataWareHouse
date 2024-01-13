@@ -1,4 +1,4 @@
-package com.progressSoft.clusteredDataWarehouse.dto.response;
+package com.progressSoft.clusteredDataWarehouse.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -19,5 +19,9 @@ public class ApiResponse {
     private HttpStatus status;
     private LocalDateTime dateTime;
     private Object data;
+
+
+
+
 
 }

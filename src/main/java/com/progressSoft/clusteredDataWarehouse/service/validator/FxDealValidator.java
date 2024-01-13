@@ -1,12 +1,12 @@
 package com.progressSoft.clusteredDataWarehouse.service.validator;
 
-import com.progressSoft.clusteredDataWarehouse.exception.DuplicateEntityException;
-import com.progressSoft.clusteredDataWarehouse.exception.InvalidAmountException;
-import com.progressSoft.clusteredDataWarehouse.exception.InvalidISOCodeException;
-import com.progressSoft.clusteredDataWarehouse.exception.SameCurrencyException;
+import com.progressSoft.clusteredDataWarehouse.exception.EntityAlreadyExistsException;
+import com.progressSoft.clusteredDataWarehouse.exception.AmountValidationException;
+import com.progressSoft.clusteredDataWarehouse.exception.ISOCodeValidationException;
+import com.progressSoft.clusteredDataWarehouse.exception.DuplicateCurrencyException;
 import com.progressSoft.clusteredDataWarehouse.repository.FxDealRepository;
 import org.springframework.stereotype.Component;
-import com.progressSoft.clusteredDataWarehouse.model.FxDeal;
+import com.progressSoft.clusteredDataWarehouse.entity.ForexDeals;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -22,10 +22,10 @@ public class FxDealValidator {
     }
 
     public boolean isDealUnique(String dealUniqueId) {
-        Optional<FxDeal> existingDeal = dealsRepository.findByDealUniqueId(dealUniqueId);
+        Optional<ForexDeals> existingDeal = dealsRepository.findByDealUniqueId(dealUniqueId);
         if (existingDeal.isPresent()) {
             log.error("Deal with this id already exist");
-            throw new DuplicateEntityException("Deal with this id already exist");
+            throw new EntityAlreadyExistsException("Deal with this id already exist");
         }
         return true;
     }
@@ -33,21 +33,21 @@ public class FxDealValidator {
     public boolean isISOCurrencyCodeValid(String currencyCode) {
         boolean validIso = Currency.getAvailableCurrencies().stream().anyMatch(a -> a.getCurrencyCode().equals(currencyCode));
         if (!validIso)
-            throw new InvalidISOCodeException("Invalid Currency ISO");
+            throw new ISOCodeValidationException("Invalid Currency ISO");
         return true;
     }
 
     public void validateFromCurrencyAndToCurrency(String fromCurrencyISOCode, String toCurrencyISOCode) {
         if (fromCurrencyISOCode.equals(toCurrencyISOCode)) {
             log.error("fromCurrency and toCurrency cannot be the same");
-            throw new SameCurrencyException("fromCurrency and toCurrency cannot be the same");
+            throw new DuplicateCurrencyException("fromCurrency and toCurrency cannot be the same");
         }
     }
 
     public void validateDealAmount(BigDecimal dealAmount) {
         if (dealAmount.compareTo(BigDecimal.ZERO) <= 0) {
             log.error("Invalid deal amount, amount should be greater than zero");
-            throw new InvalidAmountException("Invalid deal amount");
+            throw new AmountValidationException("Invalid deal amount");
         }
     }
 

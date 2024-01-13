@@ -1,6 +1,6 @@
 package com.progressSoft.clusteredDataWarehouse.util;
 
-import com.progressSoft.clusteredDataWarehouse.dto.response.ApiResponse;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 
 public class ApiUtils {

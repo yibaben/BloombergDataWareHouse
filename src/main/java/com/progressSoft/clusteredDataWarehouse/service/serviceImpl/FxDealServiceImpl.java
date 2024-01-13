@@ -1,10 +1,10 @@
 package com.progressSoft.clusteredDataWarehouse.service.serviceImpl;
 
-import com.progressSoft.clusteredDataWarehouse.dto.request.FxDealRequestDTO;
-import com.progressSoft.clusteredDataWarehouse.dto.response.FxDealResponseDTO;
-import com.progressSoft.clusteredDataWarehouse.dto.response.PageResponse;
-import com.progressSoft.clusteredDataWarehouse.exception.FxDealNotFoundException;
-import com.progressSoft.clusteredDataWarehouse.model.FxDeal;
+import com.progressSoft.clusteredDataWarehouse.dto.request.ForexDealsRequest;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.ForexDealsResponse;
+import com.progressSoft.clusteredDataWarehouse.dto.responses.PaginationResponse;
+import com.progressSoft.clusteredDataWarehouse.exception.ForexDealEntityNotFoundException;
+import com.progressSoft.clusteredDataWarehouse.entity.ForexDeals;
 import com.progressSoft.clusteredDataWarehouse.repository.FxDealRepository;
 import com.progressSoft.clusteredDataWarehouse.service.FxDealService;
 import com.progressSoft.clusteredDataWarehouse.service.mapper.FxDealMapper;
@@ -33,41 +33,41 @@ public class FxDealServiceImpl implements FxDealService {
     private final FxDealValidator fxDealValidator;
 
     @Override
-    public FxDealResponseDTO saveFxDeal(FxDealRequestDTO fxDealRequestDTO) {
+    public ForexDealsResponse saveFxDeal(ForexDealsRequest forexDealsRequest) {
 
-        fxDealValidator.isISOCurrencyCodeValid(fxDealRequestDTO.getFromCurrencyISOCode());
-        fxDealValidator.isISOCurrencyCodeValid(fxDealRequestDTO.getToCurrencyISOCode());
-        fxDealValidator.validateFromCurrencyAndToCurrency(fxDealRequestDTO.getFromCurrencyISOCode(), fxDealRequestDTO.getToCurrencyISOCode());
-        fxDealValidator.validateDealAmount(fxDealRequestDTO.getDealAmount());
-        fxDealValidator.isDealUnique(fxDealRequestDTO.getDealUniqueId());
+        fxDealValidator.isISOCurrencyCodeValid(forexDealsRequest.getFromCurrencyISOCode());
+        fxDealValidator.isISOCurrencyCodeValid(forexDealsRequest.getToCurrencyISOCode());
+        fxDealValidator.validateFromCurrencyAndToCurrency(forexDealsRequest.getFromCurrencyISOCode(), forexDealsRequest.getToCurrencyISOCode());
+        fxDealValidator.validateDealAmount(forexDealsRequest.getDealAmount());
+        fxDealValidator.isDealUnique(forexDealsRequest.getDealUniqueId());
 
-        FxDeal fxDeal = fxMapper.MapDtoRequestToFxDeal(fxDealRequestDTO);
-        fxDealRepository.save(fxDeal);
+        ForexDeals forexDeals = fxMapper.MapDtoRequestToFxDeal(forexDealsRequest);
+        fxDealRepository.save(forexDeals);
 
-        FxDealResponseDTO responseDTO = fxMapper.mapFxDealToDTORequest(fxDeal);
+        ForexDealsResponse responseDTO = fxMapper.mapFxDealToDTORequest(forexDeals);
         log.info("FxDeal saved successfully");
 
         return responseDTO;
     }
 
     @Override
-    public FxDealResponseDTO getDealByUniqueId(String dealUniqueId) {
-        FxDeal fxDeal = fxDealRepository.findByDealUniqueId(dealUniqueId)
-                .orElseThrow(() -> new FxDealNotFoundException("Deal with id " + dealUniqueId + " does not exist"));
-        return fxMapper.mapFxDealToDTORequest(fxDeal);
+    public ForexDealsResponse getDealByUniqueId(String dealUniqueId) {
+        ForexDeals forexDeals = fxDealRepository.findByDealUniqueId(dealUniqueId)
+                .orElseThrow(() -> new ForexDealEntityNotFoundException("Deal with id " + dealUniqueId + " does not exist"));
+        return fxMapper.mapFxDealToDTORequest(forexDeals);
     }
 
 
     @Override
-    public PageResponse getAllFxDeals(int pageNo, int pageSize) {
+    public PaginationResponse getAllFxDeals(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<FxDeal> fxDealList = fxDealRepository.findAll(pageable);
+        Page<ForexDeals> fxDealList = fxDealRepository.findAll(pageable);
         log.info("FxDeals successfully retrieved");
 
-        List<FxDealResponseDTO> collect = fxDealList.stream()
+        List<ForexDealsResponse> collect = fxDealList.stream()
                 .map(fxMapper::mapFxDealToDTORequest)
                 .collect(Collectors.toList());
-        return PageResponse.builder()
+        return PaginationResponse.builder()
                 .contents(collect)
                 .pageNumber(fxDealList.getNumberOfElements())
                 .pageSize(fxDealList.getSize())

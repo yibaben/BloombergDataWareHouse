@@ -1,6 +1,6 @@
 package com.progressSoft.clusteredDataWarehouse.repository;
 
-import com.progressSoft.clusteredDataWarehouse.model.FxDeal;
+import com.progressSoft.clusteredDataWarehouse.entity.ForexDeals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +15,14 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class FxDealRepositoryTest {
+class ForexDealsRepositoryTest {
     @Autowired
     private FxDealRepository fxDealRepository;
-    private FxDeal fxDeal;
+    private ForexDeals forexDeals;
 
     @BeforeEach
     void setUp() {
-        fxDeal = FxDeal.builder()
+        forexDeals = ForexDeals.builder()
                 .dealUniqueId("01")
                 .dealAmount(BigDecimal.valueOf(20000.0))
                 .fromCurrencyISOCode(Currency.getInstance("USD"))
@@ -33,40 +33,40 @@ class FxDealRepositoryTest {
 
     @Test
     void saveDeal() {
-        FxDeal savedDeal = fxDealRepository.save(fxDeal);
+        ForexDeals savedDeal = fxDealRepository.save(forexDeals);
         assertThat(savedDeal).isNotNull();
-        assertThat(savedDeal).isEqualTo(fxDeal);
+        assertThat(savedDeal).isEqualTo(forexDeals);
     }
 
     @Test
     void findAllDeals() {
-        List<FxDeal> fxDealList = Arrays.asList(
-                FxDeal.builder()
+        List<ForexDeals> forexDealsList = Arrays.asList(
+                ForexDeals.builder()
                         .dealUniqueId("01")
                         .dealAmount(BigDecimal.valueOf(20000.0))
                         .fromCurrencyISOCode(Currency.getInstance("USD"))
                         .toCurrencyISOCode(Currency.getInstance("NGN"))
                         .dealTimeStamp(LocalDateTime.now())
                         .build(),
-                FxDeal.builder()
+                ForexDeals.builder()
                         .dealUniqueId("02")
                         .dealAmount(BigDecimal.valueOf(20000.0))
                         .fromCurrencyISOCode(Currency.getInstance("USD"))
                         .toCurrencyISOCode(Currency.getInstance("NGN"))
                         .dealTimeStamp(LocalDateTime.now())
                         .build(),
-                FxDeal.builder()
+                ForexDeals.builder()
                         .dealUniqueId("03")
                         .dealAmount(BigDecimal.valueOf(20000.0))
                         .fromCurrencyISOCode(Currency.getInstance("USD"))
                         .toCurrencyISOCode(Currency.getInstance("NGN"))
                         .dealTimeStamp(LocalDateTime.now())
                         .build());
-        fxDealRepository.saveAll(fxDealList);
+        fxDealRepository.saveAll(forexDealsList);
 
-        List<FxDeal> savedFxDeals = fxDealRepository.findAll();
+        List<ForexDeals> savedForexDeals = fxDealRepository.findAll();
 
-        assertThat(savedFxDeals).isNotNull();
-        assertThat(savedFxDeals.size()).isEqualTo(fxDealList.size());
+        assertThat(savedForexDeals).isNotNull();
+        assertThat(savedForexDeals.size()).isEqualTo(forexDealsList.size());
     }
 }

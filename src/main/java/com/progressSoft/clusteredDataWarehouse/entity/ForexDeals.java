@@ -1,4 +1,4 @@
-package com.progressSoft.clusteredDataWarehouse.model;
+package com.progressSoft.clusteredDataWarehouse.entity;
 
 import lombok.*;
 
@@ -16,7 +16,7 @@ import java.util.Currency;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FxDeal {
+public class ForexDeals {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)

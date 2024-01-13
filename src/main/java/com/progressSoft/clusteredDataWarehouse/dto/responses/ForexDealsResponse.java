@@ -1,4 +1,4 @@
-package com.progressSoft.clusteredDataWarehouse.dto.response;
+package com.progressSoft.clusteredDataWarehouse.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Builder
-public class FxDealResponseDTO {
+public class ForexDealsResponse {
     private String dealUniqueId;
     private String fromCurrencyISOCode;
     private String toCurrencyISOCode;

@@ -1,6 +1,5 @@
 package com.progressSoft.clusteredDataWarehouse.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FxDealRequestDTO {
+public class ForexDealsRequest {
 
     @NotEmpty(message = "Deal Id field cannot be empty")
     private String dealUniqueId;
