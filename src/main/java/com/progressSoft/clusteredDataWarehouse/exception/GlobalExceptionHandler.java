@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.progressSoft.clusteredDataWarehouse.util.ApiUtils.buildErrorResponse;
+import static com.progressSoft.clusteredDataWarehouse.util.ApiResponseUtils.buildErrorResponse;
 
 @Slf4j
 @RestControllerAdvice
