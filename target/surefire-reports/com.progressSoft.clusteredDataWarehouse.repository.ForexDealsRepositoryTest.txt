@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.progressSoft.clusteredDataWarehouse.repository.ForexDealsRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.996 s - in com.progressSoft.clusteredDataWarehouse.repository.ForexDealsRepositoryTest
