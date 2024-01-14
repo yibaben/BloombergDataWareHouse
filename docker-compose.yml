@@ -1,27 +1,48 @@
-version: '3.1'
-services:
-  app:
-    container_name: clusteredDataWarehouse
-    image: clustereddatawarehouse
-    build: ./
-    ports:
-      - "7070:8090"
-    depends_on:
-      - db
-    networks:
-      - network
-  db:
-    container_name: clusteredData_warehouse
-    image: postgres:latest
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_PASSWORD=mharie
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=clusteredData_warehouse
-    networks:
-      - network
+version: '3'
 
-networks:
-  network:
-    driver: bridge
+services:
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: BloombergDataWarehouseLiveDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+
+
+
+#version: '3.1'
+#services:
+#  app:
+#    container_name: clusteredDataWarehouse
+#    image: clustereddatawarehouse
+#    build: ./
+#    ports:
+#      - "5000:5000"
+#    depends_on:
+#      - db
+#    networks:
+#      - network
+#  db:
+#    container_name: clusteredData_Warehouse
+#    image: postgres:latest
+#    ports:
+#      - "5433:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=password
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_DB=BloombergDataWarehouse
+#    networks:
+#      - network
+#
+#networks:
+#  network:
+#    driver: bridge
