@@ -1,19 +1,18 @@
 
-# ClusteredData Warehouse
+# Bloomberg ClusteredData Warehouse
 
-This is to analyze fx deals by accepting deals and persisting in the DB.
+This is used to analyze forex deals by accepting forex deals and saving it into a Database.
 
 
-##  Run - Docker
+##  To run the project, you need Docker and a Java environment (JDK 19). Follow the steps below:
+- Navigate to the project root directory using a terminal or command prompt.
+- Run - Docker
 ```sh
 docker-compose up
 ```
 
-## Project Run
-#### How to run the project
-- To run the project you need docker and a java environment (19). Navigate to the project root and run
-- ```shell
-    docker-compose up -d
+```shell
+docker-compose up -d
 ``` 
 or simply run if you have make installed. the application runs on port 7070
 
@@ -30,16 +29,18 @@ or simply run if you have make installed. the application runs on port 7070
 
 #### Technology Used
 - SPRINGBOOT
-- POSTGRES
+- POSTGRESQL
 - DOCKER
+- JUNIT
+- SWAGGER
 
 # Project Packages
-#### Resource
-- POST - /api/v1/fxDeals - The endpoint saves the fx deal to the DB
-- GET - /api/v1/fxDeals/{{dealId}} - The endpoint Get an fx deal by id retrieves a list of fxDeals from the DB
-- GET - /api/v1/fxDeals -  The endpoint retrieves a list of fxDeals from the DB with pagination
+#### Controller REST API Endpoints
+- POST - http://localhost:5000/api/v1/forexDeals/create/and/save - The endpoint create and saves a unique forex deal to the Database
+- GET - http://localhost:5000/api/v1/forexDeals/get/by/uniqueId/{{uniqueId}} - The endpoint Gets a forex deal by uniqueId from the Database
+- GET - http://localhost:5000/api/v1/forexDeals/get/all -  The endpoint retrieves a list of all forexDeals from the Database with pagination
 
-### Service and Impl
+### Service and Implementations
 - The business logic is in the serviceImpl package in the service package. The service class is an interface that implements the serviceImpl class.
 
 #### Model
@@ -53,21 +54,29 @@ or simply run if you have make installed. the application runs on port 7070
 #### Logging
 - Logging used to log errors and info for the service clas.
 
-### Request body to save a deal
+TEST
+- Unit test in the test package.
+
+SWAGGER-UI-DOC
+- After starting the application, enter `localhost:5000/swagger-ui/index.html` in your browser to access the swagger doc.
+
+### Request payload to create and save a forex deal
+```json
 {
-    "dealUniqueId": "01",
+    "dealUniqueId": "1001",
     "fromCurrencyISOCode": "USD",
     "toCurrencyISOCode": "NGN",
     "dealAmount": 10000.0
 }
+```
 
-### Success Response to save FxDeal
+### Successful Response to create and save ForexDeal
 ```json
 {
     "message": "successful",
     "status": "OK",
     "data": {
-        "dealUniqueId": "01",
+        "dealUniqueId": "1001",
         "fromCurrencyISOCode": "USD",
         "toCurrencyISOCode": "NGN",
         "dealTimeStamp": "2023-07-11T20:27:02.009214",
@@ -76,13 +85,13 @@ or simply run if you have make installed. the application runs on port 7070
 }
 ```
 
-### Success Response to get a deal by Id
+### Successful Response to get a forex deal by uniqueId
 ```json
 {
     "message": "successful",
     "status": "OK",
     "data": {
-        "dealUniqueId": "01",
+        "dealUniqueId": "1001",
         "fromCurrencyISOCode": "USD",
         "toCurrencyISOCode": "NGN",
         "dealTimeStamp": "2023-07-11T20:27:02.009214",
@@ -91,41 +100,60 @@ or simply run if you have make installed. the application runs on port 7070
 }
 ```
 
-### Error Response received for saving an existing deal
+### Error Response received for saving an existing forex deal
 ```json
 {
-    "message": "error",
-    "status": "BAD_REQUEST",
-    "data": "Deal with this id already exist"
+  "message": "error",
+  "status": "BAD_REQUEST",
+  "data": "Forex Deal with this id already exists"
 }
 ```
 
-```json --- To retrieve FxDeals
+### Error Response received for Invalid Currency ISO Code
+```json
+{
+  "message": "error",
+  "status": "BAD_REQUEST",
+  "data": "Invalid Currency ISO Code"
+}
+```
+
+### Error Response received for Forex Deal Amount less than or equal to 0 
+```json
+{
+  "message": "error",
+  "status": "BAD_REQUEST",
+  "data": "Invalid deal amount, amount most be greater than zero"
+}
+```
+
+### Successful Response To retrieve All ForexDeals with pagination
+```json
 {
   "message": "successful",
   "status": "OK",
   "data": {
     "contents": [
       {
-        "dealUniqueId": "114",
+        "dealUniqueId": "1001",
         "fromCurrencyISOCode": "USD",
         "toCurrencyISOCode": "NGN",
         "dealTimeStamp": "2023-07-11T16:42:04.35729",
-        "dealAmount": 90.00
+        "dealAmount": 10000.00
       },
       {
-        "dealUniqueId": "111",
-        "fromCurrencyISOCode": "USD",
+        "dealUniqueId": "1002",
+        "fromCurrencyISOCode": "GBP",
         "toCurrencyISOCode": "NGN",
         "dealTimeStamp": "2023-07-11T16:42:09.587207",
-        "dealAmount": 90.00
+        "dealAmount": 20000.00
       },
       {
-        "dealUniqueId": "1131",
-        "fromCurrencyISOCode": "USD",
+        "dealUniqueId": "1003",
+        "fromCurrencyISOCode": "EUR",
         "toCurrencyISOCode": "NGN",
         "dealTimeStamp": "2023-07-11T16:42:12.952732",
-        "dealAmount": 90.00
+        "dealAmount": 30000.00
       }
     ],
     "pageNumber": 3,
@@ -133,5 +161,4 @@ or simply run if you have make installed. the application runs on port 7070
   }
 }
 ```
-TEST
-- Unit test in the test package. 
+
